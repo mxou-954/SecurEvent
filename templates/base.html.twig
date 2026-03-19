@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}SecurEvent{% endblock %}</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+<nav class="navbar navbar-dark bg-dark px-4 mb-4">
+    <a class="navbar-brand fw-bold" href="{{ path('app_home') }}">SecurEvent</a>
+    <div>
+        {% if is_granted('ROLE_ADMIN') %}
+            {# <a href="{{ path('app_admin_events') }}" class="btn btn-warning btn-sm me-2">Admin</a> #}
+        {% endif %}
+        {% if app.user %}
+            <a href="{{ path('app_profile_dashboard') }}" class="btn btn-outline-light btn-sm me-2">Mon espace</a>
+            <a href="{{ path('app_logout') }}" class="btn btn-outline-danger btn-sm">Déconnexion</a>
+        {% else %}
+            <a href="{{ path('app_login') }}" class="btn btn-outline-light btn-sm me-2">Connexion</a>
+            <a href="{{ path('app_register') }}" class="btn btn-success btn-sm">Inscription</a>
+        {% endif %}
+    </div>
+</nav>
+<div class="container">
+    {% for message in app.flashes('success') %}
+        <div class="alert alert-success">{{ message }}</div>
+    {% endfor %}
+    {% for message in app.flashes('error') %}
+        <div class="alert alert-danger">{{ message }}</div>
+    {% endfor %}
+
+    {% block body %}{% endblock %}
+</div>
+</body>
+</html>
