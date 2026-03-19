@@ -1,0 +1,9 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    {{ form_start(form) }}
+    <h1> Créer un nouvel évènement</h1>
+    {{ form_widget(form)}}
+    <button type="submit">Créer</button>
+    {{ form_end(form) }}
+{%endblock %}
