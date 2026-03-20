@@ -30,7 +30,18 @@ class EventRepository extends ServiceEntityRepository
     //            ->getResult()
     //        ;
     //    }
-
+        public function findUpcomingEvents(): array
+        {
+            return $this->createQueryBuilder('e')
+                ->andWhere('e.isPublished = :published')
+                ->setParameter('published', true)
+                ->andWhere('e.dateDebut > :now')
+                ->setParameter('now', new \DateTimeImmutable())
+                ->orderBy('e.dateDebut', 'ASC')
+                ->getQuery()
+                ->getResult()
+            ;
+        }
     //    public function findOneBySomeField($value): ?Event
     //    {
     //        return $this->createQueryBuilder('e')

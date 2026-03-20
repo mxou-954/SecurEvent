@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Event;
 use App\Form\EventType;
 use App\Repository\EventRepository;
+use App\Service\EventCapacityManager;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
@@ -55,11 +56,28 @@ final class EventController extends AbstractController
     #[Route('/event/events', name: 'app_event_list')]
     public function show(EventRepository $eventRepository): Response
     {
-        $events = $eventRepository->findAll();
+        $events = $eventRepository->findUpcomingEvents();
 
         return $this->render('event/show.html.twig', [
             'events' => $events,
         ]);
+    }
+
+    #[Route('/{id}/register', name: 'app_event_register', methods: ['POST'])]
+    public function eventRegister(Event $event, EventCapacityManager $ecm): Response
+    {
+        if($ecm->isEventFull($event)){
+            return $this->render('event/detail_full.html.twig', [
+                'event' => $event,
+            ]);
+        }
+        else{
+            $availablePlaces = $ecm->getAvailablePlaces($event);
+            return $this->render('event/detail.html.twig', [
+                'event' => $event,
+                'availablePlaces' => $availablePlaces,
+            ]);
+        }
     }
 }
 

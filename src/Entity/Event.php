@@ -3,7 +3,11 @@
 namespace App\Entity;
 
 use App\Repository\EventRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Attribute\Groups;
 
 #[ORM\Entity(repositoryClass: EventRepository::class)]
 class Event
@@ -11,12 +15,17 @@ class Event
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['event:read'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
+        #[Groups(['event:read'])]
+
     private ?string $titre = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+        #[Groups(['event:read'])]
+
     private ?string $description = null;
 
     #[ORM\Column]
@@ -30,6 +39,14 @@ class Event
 
     #[ORM\Column]
     private ?bool $isPublished = null;
+
+    #[ORM\ManyToMany(targetEntity: User::class, inversedBy: 'events')]
+    private Collection $participants;
+
+    public function __construct()
+    {
+        $this->participants = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -113,6 +130,27 @@ class Event
         $this->isPublished = $isPublished;
 
         return $this;
+    }
+    
+    public function getParticipants(): Collection { return $this->participants; }
+
+    public function addParticipant(User $user): static
+    {
+        if (!$this->participants->contains($user)) {
+            $this->participants->add($user);
+        }
+        return $this;
+    }
+
+    public function removeParticipant(User $user): static
+    {
+        $this->participants->removeElement($user);
+        return $this;
+    }
+
+    public function getPlacesRestantes(): int
+    {
+        return $this->capaciteMax - $this->participants->count();
     }
     
 }

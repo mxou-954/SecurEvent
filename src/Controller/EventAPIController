@@ -1,0 +1,33 @@
+<?php 
+
+namespace App\Controller;
+use App\Entity\Event;
+use App\Form\EventType; 
+use App\Repository\EventRepository;
+use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Serializer\SerializerInterface;
+
+final class EventAPIController extends AbstractController
+{
+    #[Route('/api/events', name: 'app_api_events', methods: ['GET'])]
+    public function list(EventRepository $eventRepository, SerializerInterface $serializer): Response
+    {
+        $events = $eventRepository->findAll();
+        $json = $serializer->serialize($events, 'json');
+        return new Response($json, 200, ['Content-Type' => 'application/json']);
+    }
+
+    #[Route('/api/events', name: 'app_api_events_create', methods: ['POST'])]
+    public function create(Request $request, EntityManagerInterface $emi, SerializerInterface $serializer): Response
+    {
+        $data = $request->getContent();
+        $event = $serializer->deserialize($data, Event::class, 'json');
+        $emi->persist($event);
+        $emi->flush();
+        return new Response('Event créé avec l\'ID : ' . $event->getId(), 201);
+    }
+}
