@@ -13,15 +13,15 @@ use Symfony\Component\Serializer\SerializerInterface;
 
 final class EventAPIController extends AbstractController
 {
-    #[Route('/api/events', name: 'app_api_events', methods: ['GET'])]
-    public function list(EventRepository $eventRepository, SerializerInterface $serializer): Response
+    #[Route('/api/events', name: 'api_event_read', methods: ['GET'])]
+    public function getEvents(EventRepository $eventRepository, SerializerInterface $serializer): Response
     {
         $events = $eventRepository->findAll();
         $json = $serializer->serialize($events, 'json');
         return new Response($json, 200, ['Content-Type' => 'application/json']);
     }
 
-    #[Route('/api/events', name: 'app_api_events_create', methods: ['POST'])]
+    #[Route('/api/events', name: 'api_event_create', methods: ['POST'])]
     public function create(Request $request, EntityManagerInterface $emi, SerializerInterface $serializer): Response
     {
         $data = $request->getContent();
