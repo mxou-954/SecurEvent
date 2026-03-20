@@ -35,7 +35,7 @@ final class EventController extends AbstractController
         return new Response('Event créé avec l\'ID : ' . $event->getId());
     }
 
-    #[Route('/event/newev', name: 'app_event_new')]
+    #[Route('/admin/event/newev', name: 'app_event_new')] 
     public function create(Request $request, EntityManagerInterface $emi): Response
     {   $event = new Event();
         $form = $this->createForm(EventType::class, $event);
@@ -53,10 +53,10 @@ final class EventController extends AbstractController
         ]);
     }
 
-    #[Route('/event/events', name: 'app_event_list')]
+    #[Route('/api/events', name: 'app_event_list')]
     public function show(EventRepository $eventRepository): Response
     {
-        $events = $eventRepository->findUpcomingEvents();
+        $events = $eventRepository->findAll();
 
         return $this->render('event/show.html.twig', [
             'events' => $events,
@@ -78,6 +78,26 @@ final class EventController extends AbstractController
                 'availablePlaces' => $availablePlaces,
             ]);
         }
+    }
+
+    #[Route('/admin/event/{id}/edit/', name: 'admin_event_edit', methods: ['PATCH'])]
+    public function modify(Event $event, Request $request, EntityManagerInterface $emi): Response
+    {
+        $data = json_decode($request->getContent(), true);
+        if (isset($data['isPublished'])) {
+            $event->setIsPublished($data['isPublished']);
+            $emi->flush();
+            return new Response('Event mis à jour avec succès !', 200);
+        }
+        return new Response('Données invalides', 400);
+    }
+
+    #[Route('/admin/event/{id}', name: 'app_event_delete', methods: ['DELETE'])]
+    public function delete(Event $event, EntityManagerInterface $emi): Response
+    {
+        $emi->remove($event);
+        $emi->flush();
+        return new Response('Event supprimé avec succès !', 200);
     }
 }
 
