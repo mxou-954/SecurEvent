@@ -13,17 +13,21 @@
         <p>🎟️ <strong>{{ event.placesRestantes }}</strong> place(s) restante(s) sur {{ event.capaciteMax }}</p>
 
         {% if is_granted('ROLE_USER') %}
-            {% if event.placesRestantes > 0 %}
-                <form method="post" action="{{ path('app_event_register', {id: event.id}) }}">
-                    <input type="hidden" name="_token" value="{{ csrf_token('register_event_' ~ event.id) }}">
-                    <button class="btn btn-success">M'inscrire</button>
-                </form>
-            {% else %}
-                <p class="text-danger fw-bold">Complet !</p>
-            {% endif %}
+        {% if isRegistered %}
+            <div class="alert alert-success">
+                ✅ Vous êtes inscrit à cet événement ! <a href="{{ path('app_profile_events') }}">Voir mes événements</a>
+            </div>
+        {% elseif event.placesRestantes > 0 %}
+            <form method="post" action="{{ path('app_event_register', {id: event.id}) }}">
+                <input type="hidden" name="_token" value="{{ csrf_token('register_event_' ~ event.id) }}">
+                <button class="btn btn-success">M'inscrire</button>
+            </form>
         {% else %}
-            <a href="{{ path('app_login') }}" class="btn btn-outline-primary">Connectez-vous pour vous inscrire</a>
+            <p class="text-danger fw-bold">Complet !</p>
         {% endif %}
+    {% else %}
+        <a href="{{ path('app_login') }}" class="btn btn-outline-primary">Connectez-vous pour vous inscrire</a>
+    {% endif %}
     </div>
 </div>
 {% endblock %}

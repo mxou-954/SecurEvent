@@ -1,0 +1,30 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Mes événements{% endblock %}
+
+{% block body %}
+<h1 class="mb-4">Mes événements</h1>
+
+{% if events is empty %}
+    <p class="text-muted">Vous n'êtes inscrit à aucun événement.</p>
+{% else %}
+    <div class="row row-cols-1 row-cols-md-3 g-4">
+        {% for event in events %}
+        <div class="col">
+            <div class="card h-100">
+                <div class="card-body">
+                    <h5 class="card-title">{{ event.titre }}</h5>
+                    <p>📅 {{ event.dateDebut|date('d/m/Y H:i') }}</p>
+                    <p>📍 {{ event.lieu }}</p>
+                </div>
+                <div class="card-footer">
+                    <a href="{{ path('app_event_show', {id: event.id}) }}" class="btn btn-sm btn-outline-primary">Voir détails</a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+{% endif %}
+
+<a href="{{ path('app_profile_dashboard') }}" class="btn btn-outline-secondary mt-4">Retour au profil</a>
+{% endblock %}

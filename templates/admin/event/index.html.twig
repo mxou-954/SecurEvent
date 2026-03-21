@@ -1,0 +1,42 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Admin — Événements{% endblock %}
+
+{% block body %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1>Gestion des événements</h1>
+    <a href="{{ path('app_admin_event_new') }}" class="btn btn-success">+ Créer</a>
+</div>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Titre</th>
+            <th>Date</th>
+            <th>Lieu</th>
+            <th>Capacité</th>
+            <th>Publié</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for event in events %}
+        <tr>
+            <td>{{ event.titre }}</td>
+            <td>{{ event.dateDebut|date('d/m/Y H:i') }}</td>
+            <td>{{ event.lieu }}</td>
+            <td>{{ event.participants|length }} / {{ event.capaciteMax }}</td>
+            <td>{{ event.isPublished ? '✅' : '❌' }}</td>
+            <td>
+                <a href="{{ path('app_admin_event_edit', {id: event.id}) }}" class="btn btn-sm btn-warning">Modifier</a>
+                <a href="{{ path('app_admin_event_participants', {id: event.id}) }}" class="btn btn-sm btn-info">Inscrits</a>
+                <form method="post" action="{{ path('app_admin_event_delete', {id: event.id}) }}" style="display:inline">
+                    <input type="hidden" name="_token" value="{{ csrf_token('delete_event_' ~ event.id) }}">
+                    <button class="btn btn-sm btn-danger" onclick="return confirm('Supprimer ?')">Supprimer</button>
+                </form>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

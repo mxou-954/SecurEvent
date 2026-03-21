@@ -10,7 +10,7 @@
     <a class="navbar-brand fw-bold" href="{{ path('app_home') }}">SecurEvent</a>
     <div>
         {% if is_granted('ROLE_ADMIN') %}
-            {# <a href="{{ path('app_admin_events') }}" class="btn btn-warning btn-sm me-2">Admin</a> #}
+            <a href="{{ path('app_admin_events') }}" class="btn btn-warning btn-sm me-2">Admin</a>
         {% endif %}
         {% if app.user %}
             <a href="{{ path('app_profile_dashboard') }}" class="btn btn-outline-light btn-sm me-2">Mon espace</a>

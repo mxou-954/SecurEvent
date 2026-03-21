@@ -1,0 +1,22 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ title }}{% endblock %}
+
+{% block body %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card p-4">
+            <h1 class="mb-4">{{ title }}</h1>
+            {{ form_start(form) }}
+                {{ form_row(form.titre) }}
+                {{ form_row(form.description) }}
+                {{ form_row(form.dateDebut) }}
+                {{ form_row(form.lieu) }}
+                {{ form_row(form.capaciteMax) }}
+                {{ form_row(form.isPublished) }}
+                <button type="submit" class="btn btn-primary w-100 mt-2">Enregistrer</button>
+            {{ form_end(form) }}
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -57,4 +57,15 @@ class ProfileController extends AbstractController
             'profileForm' => $form,
         ]);
     }
+
+    #[Route('/profile/mes-evenements', name: 'app_profile_events')]
+    public function mesEvenements(): Response
+    {
+        /** @var User $user */
+        $user = $this->getUser();
+    
+        return $this->render('profile/mes-evenements.html.twig', [
+            'events' => $user->getEvents(), // ← récupère les events liés au user
+        ]);
+    }
 }

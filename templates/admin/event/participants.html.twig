@@ -1,0 +1,32 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Inscrits — {{ event.titre }}{% endblock %}
+
+{% block body %}
+<h1 class="mb-4">Inscrits à "{{ event.titre }}"</h1>
+
+{% if event.participants is empty %}
+    <p class="text-muted">Aucun inscrit pour le moment.</p>
+{% else %}
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Prénom</th>
+                <th>Nom</th>
+                <th>Email</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for participant in event.participants %}
+            <tr>
+                <td>{{ participant.prenom }}</td>
+                <td>{{ participant.nom }}</td>
+                <td>{{ participant.email }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endif %}
+
+<a href="{{ path('app_admin_events') }}" class="btn btn-outline-secondary mt-3">Retour</a>
+{% endblock %}

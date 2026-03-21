@@ -39,7 +39,6 @@ class RegistrationFormType extends AbstractType
                 new Email(
                     message: 'The email {{ value }} is not a valid email.',
                 ),
-                new NoSuspiciousCharacters(),
             ]])
             ->add('prenom', TextType::class, [
                 'mapped' => false,
@@ -54,7 +53,6 @@ class RegistrationFormType extends AbstractType
                         max: 80,
                         maxMessage: 'Your first name should be at most {{ limit }} characters',
                     ),
-                    new NoSuspiciousCharacters(),
                 ],
             ])
             ->add('nom', TextType::class, [
@@ -70,7 +68,6 @@ class RegistrationFormType extends AbstractType
                         max: 80,
                         maxMessage: 'Your last name should be at most {{ limit }} characters',
                     ),
-                    new NoSuspiciousCharacters(),
                 ],
             ])
             ->add('agreeTerms', CheckboxType::class, [
